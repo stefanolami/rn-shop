@@ -1,9 +1,11 @@
 import { View, Text } from 'react-native'
 
-export default function Auth() {
+const Cart = () => {
 	return (
 		<View>
-			<Text>Auth</Text>
+			<Text>Cart</Text>
 		</View>
 	)
 }
+
+export default Cart
