@@ -71,7 +71,7 @@ const ListHeader = () => {
 					renderItem={({ item }) => (
 						<Link
 							asChild
-							href={`/category/${item.slug}`}
+							href={`/categories/${item.slug}`}
 						>
 							<Pressable style={styles.category}>
 								<Image
