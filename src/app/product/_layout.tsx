@@ -9,7 +9,7 @@ const ProductLayout = () => {
 			<Stack.Screen
 				name="[slug]"
 				options={({ navigation }) => ({
-					headerShown: false,
+					headerShown: true,
 					headerLeft: () => (
 						<TouchableOpacity onPress={() => navigation.goBack()}>
 							<Ionicons
