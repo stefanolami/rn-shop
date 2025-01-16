@@ -11,7 +11,7 @@ const Category = () => {
 	if (!category) return <Redirect href="/404" />
 
 	const products = PRODUCTS.filter(
-		(product) => product.category.slug === slug
+		(product) => product.category?.slug === slug
 	)
 
 	return (
