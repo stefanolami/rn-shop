@@ -23,15 +23,11 @@ const ProductDetails = () => {
 
 	const { items, addItem, incrementItem, decrementItem } = useCartStore()
 
-	const cartItem = items.find((item) => item.id === product.id)
-	const initialQuantity = cartItem ? cartItem.quantity : 1
-
-	const [quantity, setQuantity] = useState(initialQuantity)
+	const [quantity, setQuantity] = useState(1)
 
 	const increaseQuantity = () => {
 		if (quantity < product.maxQuantity) {
 			setQuantity((prev) => prev + 1)
-			incrementItem(product.id)
 		} else {
 			toast.show('You have reached the maximum quantity', {
 				type: 'warning',
@@ -43,7 +39,6 @@ const ProductDetails = () => {
 	const decreaseQuantity = () => {
 		if (quantity > 1) {
 			setQuantity((prev) => prev - 1)
-			decrementItem(product.id)
 		}
 	}
 	const addToCart = () => {

@@ -21,7 +21,11 @@ const RootLayout = () => {
 				/>
 				<Stack.Screen
 					name="cart"
-					options={{ presentation: 'modal', title: 'Shopping Cart' }}
+					options={{
+						presentation: 'modal',
+						title: 'Shopping Cart',
+						headerTitleAlign: 'center',
+					}}
 				/>
 				<Stack.Screen
 					name="auth"
