@@ -43,7 +43,7 @@ const Auth = () => {
 			}}
 			style={styles.backgroundImage}
 		>
-			<StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+			<StatusBar style={Platform.OS === 'ios' ? 'light' : 'light'} />
 			<View style={styles.overlay} />
 			<View style={styles.container}>
 				<Text style={styles.title}>Welcome</Text>
