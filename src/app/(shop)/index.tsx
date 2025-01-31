@@ -1,18 +1,41 @@
-import { FlatList, Text, View, StyleSheet } from 'react-native'
-import { PRODUCTS } from '../../../assets/products'
+import {
+	FlatList,
+	Text,
+	View,
+	StyleSheet,
+	ActivityIndicator,
+} from 'react-native'
 import ProductListItem from '../../components/product-list-item'
-import Product from '../product'
 import ListHeader from '../../components/list-header'
+import { StatusBar } from 'expo-status-bar'
+import { getProductsAndCategories } from '../../api/api'
 
 const Home = () => {
+	const { data, error, isLoading } = getProductsAndCategories()
+
+	if (isLoading) return <ActivityIndicator />
+
+	if (error || !data) {
+		return (
+			<Text>
+				Error:{' '}
+				{error?.message ||
+					'An unknown error occurred, try again later.'}
+			</Text>
+		)
+	}
+
 	return (
 		<View>
+			<StatusBar style="auto" />
 			<FlatList
-				data={PRODUCTS}
+				data={data.products}
 				renderItem={({ item }) => <ProductListItem product={item} />}
 				keyExtractor={(item) => item.id.toString()}
 				numColumns={2}
-				ListHeaderComponent={ListHeader}
+				ListHeaderComponent={
+					<ListHeader categories={data.categories} />
+				}
 				contentContainerStyle={styles.flatListContent}
 				columnWrapperStyle={styles.flatListColumn}
 				style={{ paddingHorizontal: 10, paddingVertical: 5 }}

@@ -1,5 +1,6 @@
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router'
 import {
+	ActivityIndicator,
 	FlatList,
 	Image,
 	StyleSheet,
@@ -10,20 +11,22 @@ import {
 import { useToast } from 'react-native-toast-notifications'
 import { useState } from 'react'
 
-import { PRODUCTS } from '../../../assets/products'
 import { useCartStore } from '../../store/cart-store'
+import { getProduct } from '../../api/api'
 
 const ProductDetails = () => {
 	const { slug } = useLocalSearchParams<{ slug: string }>()
 	const toast = useToast()
 
-	const product = PRODUCTS.find((product) => product.slug === slug)
-
-	if (!product) return <Redirect href="/404" />
+	const { data: product, error, isLoading } = getProduct(slug)
 
 	const { items, addItem, incrementItem, decrementItem } = useCartStore()
 
 	const [quantity, setQuantity] = useState(1)
+
+	if (isLoading) return <ActivityIndicator />
+	if (error) return <Text style={styles.errorMessage}>{error.message}</Text>
+	if (!product) return <Redirect href="/404" />
 
 	const increaseQuantity = () => {
 		if (quantity < product.maxQuantity) {
@@ -69,7 +72,7 @@ const ProductDetails = () => {
 				}}
 			/>
 			<Image
-				source={product.heroImage}
+				source={{ uri: product.heroImage }}
 				style={styles.heroImage}
 			/>
 			<View
@@ -87,11 +90,11 @@ const ProductDetails = () => {
 					<Text style={styles.price}>Total Price: ${totalPrice}</Text>
 				</View>
 				<FlatList
-					data={product.imagesUrl}
+					data={product.images}
 					keyExtractor={(item, index) => index.toString()}
 					renderItem={({ item }) => (
 						<Image
-							source={item}
+							source={{ uri: item }}
 							style={styles.image}
 						/>
 					)}

@@ -1,9 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Product } from '../../assets/types/product'
 import { Link } from 'expo-router'
+import { Tables } from '../types/database.types'
 
-const ProductListItem = ({ product }: { product: Product }) => {
+const ProductListItem = ({ product }: { product: Tables<'products'> }) => {
 	return (
 		<Link
 			asChild
@@ -12,7 +12,7 @@ const ProductListItem = ({ product }: { product: Product }) => {
 			<Pressable style={styles.item}>
 				<View style={styles.itemImageContainer}>
 					<Image
-						source={product.heroImage}
+						source={{ uri: product.heroImage }}
 						style={styles.itemImage}
 					/>
 				</View>

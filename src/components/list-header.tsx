@@ -9,11 +9,17 @@ import {
 	View,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
-import { CATEGORIES } from '../../assets/categories'
 import { useCartStore } from '../store/cart-store'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../providers/auth-provider'
+import { Tables } from '../types/database.types'
 
-const ListHeader = () => {
+const ListHeader = ({ categories }: { categories: Tables<'categories'>[] }) => {
 	const { getItemCount } = useCartStore()
+
+	const handleSignOut = async () => {
+		await supabase.auth.signOut()
+	}
 
 	return (
 		<View style={styles.headerContainer}>
@@ -24,7 +30,7 @@ const ListHeader = () => {
 							source={{ uri: 'https://picsum.photos/200' }}
 							style={styles.avatarImage}
 						/>
-						<Text style={styles.avatarText}>Hello, John</Text>
+						<Text style={styles.avatarText}>Hello, Stefano</Text>
 					</View>
 				</View>
 				<View style={styles.headerRight}>
@@ -54,11 +60,14 @@ const ListHeader = () => {
 							)}
 						</Pressable>
 					</Link>
-					<TouchableOpacity style={styles.signOutButton}>
+					<TouchableOpacity
+						onPress={handleSignOut}
+						style={styles.signOutButton}
+					>
 						<FontAwesome
 							name="sign-out"
 							size={25}
-							color="gray"
+							color="#ee5a5a"
 						/>
 					</TouchableOpacity>
 				</View>
@@ -72,7 +81,7 @@ const ListHeader = () => {
 			<View style={styles.categoriesContainer}>
 				<Text style={styles.sectionTitle}>Categories</Text>
 				<FlatList
-					data={CATEGORIES}
+					data={categories}
 					renderItem={({ item }) => (
 						<Link
 							asChild

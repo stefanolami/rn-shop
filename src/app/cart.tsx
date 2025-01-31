@@ -35,7 +35,7 @@ const CartItem = ({
 	return (
 		<View style={styles.cartItem}>
 			<Image
-				source={item.image}
+				source={{ uri: item.image }}
 				style={styles.itemImage}
 			/>
 			<View style={styles.itemDetails}>
