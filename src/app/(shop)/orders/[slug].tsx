@@ -96,16 +96,13 @@ const styles: { [key: string]: any } = StyleSheet.create({
 		alignSelf: 'flex-start',
 	},
 	statusBadge_Pending: {
-		backgroundColor: 'orange',
+		backgroundColor: '#ffcc00',
 	},
-	statusBadge_Completed: {
-		backgroundColor: 'green',
+	statusBadge_Delivered: {
+		backgroundColor: '#4caf50',
 	},
 	statusBadge_Shipped: {
-		backgroundColor: 'blue',
-	},
-	statusBadge_InTransit: {
-		backgroundColor: 'purple',
+		backgroundColor: '#2196f3',
 	},
 	statusText: {
 		color: '#fff',

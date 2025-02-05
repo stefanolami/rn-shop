@@ -11,6 +11,7 @@ import { Link, Stack } from 'expo-router'
 import { Tables } from '../../../types/database.types'
 import { getMyOrders } from '../../../api/api'
 import { format } from 'date-fns'
+import { useOrderUpdateSubscription } from '../../../api/subscription'
 
 const renderItem: ListRenderItem<Tables<'orders'>> = ({ item }) => {
 	return (
@@ -36,9 +37,8 @@ const renderItem: ListRenderItem<Tables<'orders'>> = ({ item }) => {
 								`statusBadge_${
 									item.status as
 										| 'Pending'
-										| 'Completed'
+										| 'Delivered'
 										| 'Shipped'
-										| 'InTransit'
 								}`
 							],
 						]}
@@ -54,6 +54,7 @@ const renderItem: ListRenderItem<Tables<'orders'>> = ({ item }) => {
 }
 
 const OrdersPage = () => {
+	//useOrderUpdateSubscription()
 	const { data: orders, error, isLoading } = getMyOrders()
 
 	if (isLoading) return <ActivityIndicator />
@@ -136,13 +137,10 @@ const styles = StyleSheet.create({
 	statusBadge_Pending: {
 		backgroundColor: '#ffcc00',
 	},
-	statusBadge_Completed: {
+	statusBadge_Delivered: {
 		backgroundColor: '#4caf50',
 	},
 	statusBadge_Shipped: {
 		backgroundColor: '#2196f3',
-	},
-	statusBadge_InTransit: {
-		backgroundColor: '#ff9800',
 	},
 })
