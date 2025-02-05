@@ -1,4 +1,5 @@
 import {
+	ActivityIndicator,
 	FlatList,
 	ListRenderItem,
 	Pressable,
@@ -6,11 +7,12 @@ import {
 	Text,
 	View,
 } from 'react-native'
-import { ORDERS } from '../../../../assets/orders'
-import { Order } from '../../../../assets/types/order'
 import { Link, Stack } from 'expo-router'
+import { Tables } from '../../../types/database.types'
+import { getMyOrders } from '../../../api/api'
+import { format } from 'date-fns'
 
-const renderItem: ListRenderItem<Order> = ({ item }) => {
+const renderItem: ListRenderItem<Tables<'orders'>> = ({ item }) => {
 	return (
 		<Link
 			href={`/orders/${item.slug}`}
@@ -19,17 +21,31 @@ const renderItem: ListRenderItem<Order> = ({ item }) => {
 			<Pressable style={styles.orderContainer}>
 				<View style={styles.orderContent}>
 					<View style={styles.orderDetailsContainer}>
-						<Text style={styles.orderItem}>{item.item}</Text>
-						<Text style={styles.orderDetails}>{item.details}</Text>
-						<Text style={styles.orderDate}>{item.date}</Text>
+						<Text style={styles.orderItem}>{item.slug}</Text>
+						<Text style={styles.orderDetails}>
+							{item.description}
+						</Text>
+						<Text style={styles.orderDate}>
+							{format(new Date(item.created_at), 'MMM dd, yyyy')}
+						</Text>
 					</View>
 					<View
 						style={[
 							styles.statusBadge,
-							styles[`statusBadge_${item.status}`],
+							styles[
+								`statusBadge_${
+									item.status as
+										| 'Pending'
+										| 'Completed'
+										| 'Shipped'
+										| 'InTransit'
+								}`
+							],
 						]}
 					>
-						<Text style={styles.statusText}>{item.status}</Text>
+						<Text style={styles.statusText}>
+							{item.status.toUpperCase()}
+						</Text>
 					</View>
 				</View>
 			</Pressable>
@@ -38,11 +54,33 @@ const renderItem: ListRenderItem<Order> = ({ item }) => {
 }
 
 const OrdersPage = () => {
+	const { data: orders, error, isLoading } = getMyOrders()
+
+	if (isLoading) return <ActivityIndicator />
+
+	if (error || !orders) return <Text>Error: {error?.message}</Text>
+
+	if (!orders.length) {
+		return (
+			<Text
+				style={{
+					fontSize: 16,
+					color: '#555',
+					textAlign: 'center',
+					padding: 10,
+					paddingTop: 30,
+				}}
+			>
+				No orders found
+			</Text>
+		)
+	}
+
 	return (
 		<View style={styles.container}>
 			<Stack.Screen options={{ title: 'Orders' }} />
 			<FlatList
-				data={ORDERS}
+				data={orders}
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={renderItem}
 			/>

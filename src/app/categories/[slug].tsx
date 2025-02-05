@@ -27,8 +27,7 @@ const Category = () => {
 		)
 	}
 
-	const category = data.category
-	const products = data.products
+	const { category, products } = data
 
 	return (
 		<View style={styles.container}>

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { PRODUCTS } from '../../assets/products'
+import { getProduct } from '../api/api'
 
 type CartItem = {
 	id: number
@@ -7,6 +7,7 @@ type CartItem = {
 	image: any
 	price: number
 	quantity: number
+	maxQuantity: number
 }
 
 type CartState = {
@@ -17,6 +18,7 @@ type CartState = {
 	decrementItem: (id: number) => void
 	getTotalPrice: () => string
 	getItemCount: () => number
+	resetCart: () => void
 }
 
 const initialCartItems: CartItem[] = []
@@ -33,8 +35,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 								...i,
 								quantity: Math.min(
 									i.quantity + item.quantity,
-									PRODUCTS.find((p) => p.id === i.id)
-										?.maxQuantity || i.quantity
+									i.maxQuantity
 								),
 						  }
 						: i
@@ -48,18 +49,15 @@ export const useCartStore = create<CartState>((set, get) => ({
 		set((state) => ({ items: state.items.filter((i) => i.id !== id) })),
 	incrementItem: (id) =>
 		set((state) => {
-			const product = PRODUCTS.find((p) => p.id === id)
-
-			if (!product) return state
-
 			return {
 				items: state.items.map((item) =>
-					item.id === id && item.quantity < product.maxQuantity
+					item.id === id && item.quantity < item.maxQuantity
 						? { ...item, quantity: item.quantity + 1 }
 						: item
 				),
 			}
 		}),
+
 	decrementItem: (id) =>
 		set((state) => ({
 			items: state.items.map((item) =>
@@ -79,4 +77,5 @@ export const useCartStore = create<CartState>((set, get) => ({
 	getItemCount: () => {
 		return get().items.reduce((total, item) => total + item.quantity, 0)
 	},
+	resetCart: () => set({ items: initialCartItems }),
 }))

@@ -1,4 +1,10 @@
-import { Redirect, Stack, useLocalSearchParams } from 'expo-router'
+import {
+	Redirect,
+	Stack,
+	useLocalSearchParams,
+	usePathname,
+	useRouter,
+} from 'expo-router'
 import {
 	ActivityIndicator,
 	FlatList,
@@ -16,20 +22,26 @@ import { getProduct } from '../../api/api'
 
 const ProductDetails = () => {
 	const { slug } = useLocalSearchParams<{ slug: string }>()
+
+	const [quantity, setQuantity] = useState(1)
+
 	const toast = useToast()
+	const router = useRouter()
 
 	const { data: product, error, isLoading } = getProduct(slug)
 
 	const { items, addItem, incrementItem, decrementItem } = useCartStore()
 
-	const [quantity, setQuantity] = useState(1)
-
 	if (isLoading) return <ActivityIndicator />
 	if (error) return <Text style={styles.errorMessage}>{error.message}</Text>
 	if (!product) return <Redirect href="/404" />
 
+	const cartItem = items.find((item) => item.id === product.id)
+
+	const availableQuantity = product.maxQuantity - (cartItem?.quantity || 0)
+
 	const increaseQuantity = () => {
-		if (quantity < product.maxQuantity) {
+		if (availableQuantity - quantity > 0) {
 			setQuantity((prev) => prev + 1)
 		} else {
 			toast.show('You have reached the maximum quantity', {
@@ -51,12 +63,16 @@ const ProductDetails = () => {
 			image: product.heroImage,
 			price: product.price,
 			quantity,
+			maxQuantity: product.maxQuantity,
 		})
 		toast.show('Added to cart', {
 			type: 'success',
 			placement: 'top',
-			duration: 1500,
+			duration: 1000,
 		})
+		setTimeout(() => {
+			router.push('/')
+		}, 1000)
 	}
 
 	const totalPrice = (product.price * quantity).toFixed(2)
@@ -82,7 +98,7 @@ const ProductDetails = () => {
 				}}
 			>
 				<Text style={styles.title}>{product.title}</Text>
-				<Text style={styles.slug}>{product.slug}</Text>
+				<Text style={styles.slug}>{product.maxQuantity} in stock</Text>
 				<View style={styles.priceContainer}>
 					<Text style={styles.price}>
 						${product.price.toFixed(2)}
@@ -121,10 +137,10 @@ const ProductDetails = () => {
 					<TouchableOpacity
 						style={[
 							styles.addToCartButton,
-							{ opacity: quantity === 0 ? 0.5 : 1 },
+							{ opacity: availableQuantity < 1 ? 0.5 : 1 },
 						]}
 						onPress={addToCart}
-						disabled={quantity === 0}
+						disabled={availableQuantity < 1}
 					>
 						<Text style={styles.addToCartText}>Add to Cart</Text>
 					</TouchableOpacity>

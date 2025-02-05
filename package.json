@@ -16,6 +16,7 @@
 		"@tanstack/react-query": "^5.65.1",
 		"@types/aes-js": "^3.1.4",
 		"aes-js": "^3.1.2",
+		"date-fns": "^4.1.0",
 		"expo": "~52.0.26",
 		"expo-constants": "~17.0.4",
 		"expo-linking": "~7.0.4",

@@ -19,7 +19,7 @@ const ProductListItem = ({ product }: { product: Tables<'products'> }) => {
 				<View style={styles.itemTextContainer}>
 					<Text style={styles.itemTitle}>{product.title}</Text>
 					<Text style={styles.itemPrice}>
-						{product.price.toFixed(2)}
+						${product.price.toFixed(2)}
 					</Text>
 				</View>
 			</Pressable>

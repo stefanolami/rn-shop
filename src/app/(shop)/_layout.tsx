@@ -7,13 +7,13 @@ import { useAuth } from '../../providers/auth-provider'
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>['name']
-	color: string
+	focus: boolean
 }) {
 	return (
 		<FontAwesome
 			size={24}
 			{...props}
-			style={{ color: '#1BC464' }}
+			style={{ color: `${props.focus ? '#1BC464' : 'gray'}` }}
 		/>
 	)
 }
@@ -47,6 +47,7 @@ const TabsLayout = () => {
 							return (
 								<TabBarIcon
 									name="shopping-cart"
+									focus={props.focused}
 									{...props}
 								/>
 							)
@@ -61,6 +62,7 @@ const TabsLayout = () => {
 							return (
 								<TabBarIcon
 									name="book"
+									focus={props.focused}
 									{...props}
 								/>
 							)
