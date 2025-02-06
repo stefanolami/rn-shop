@@ -17,5 +17,8 @@ export const useOrderUpdateSubscription = () => {
 				}
 			)
 			.subscribe()
+		return () => {
+			subscriptionResponse.unsubscribe()
+		}
 	}, [])
 }
