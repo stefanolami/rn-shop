@@ -11,6 +11,7 @@ import {
 import { useCartStore } from '../store/cart-store'
 import { StatusBar } from 'expo-status-bar'
 import { createOrder, createOrderItem } from '../api/api'
+import { openStripeCheckout, setupStripePaymentSheet } from '../lib/stripe'
 
 type CartItemType = {
 	id: number
@@ -91,7 +92,25 @@ const Cart = () => {
 		const totalPrice = parseFloat(getTotalPrice())
 
 		try {
-			await createSupabaseOrder(
+			const setup = await setupStripePaymentSheet(
+				Math.floor(totalPrice * 100)
+			)
+
+			if (!setup) {
+				Alert.alert('An error occurred while setting up the payment')
+				return
+			}
+
+			const result = await openStripeCheckout()
+
+			if (!result) {
+				Alert.alert('An error occurred while processing the payment')
+				return
+			}
+
+			console.log('result', result)
+
+			/* await createSupabaseOrder(
 				{ totalPrice },
 				{
 					onSuccess: async (data) => {
@@ -119,7 +138,8 @@ const Cart = () => {
 						)
 					},
 				}
-			)
+			) */
+			console.log('payment done')
 		} catch (error) {
 			console.error('Error creating order:', error)
 			alert('An error occurred while creating the order')

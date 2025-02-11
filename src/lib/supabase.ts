@@ -9,9 +9,8 @@ import { Database } from '../types/database.types'
 // bytes, an AES-256 key is generated and stored in SecureStore, while
 // it is used to encrypt/decrypt values stored in AsyncStorage.
 
-const supabaseUrl = 'https://setvhsfozkamwnvtcrwr.supabase.co'
-const supabaseAnonKey =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNldHZoc2ZvemthbXdudnRjcndyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc1Mzk4MjYsImV4cCI6MjA1MzExNTgyNn0.SH1VHasjLdWO8Wdt0LHcZwfOe-DqaV_WDciwHFViXHo'
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
 
 class LargeSecureStore {
 	private async _encrypt(key: string, value: string) {
